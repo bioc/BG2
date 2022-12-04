@@ -1,0 +1,131 @@
+---
+title: "BG2"
+author: "Shuangshuang Xu"
+date: "`r Sys.Date()`"
+output: 
+    BiocStyle::html_document:
+      toc: true
+bibliography: references.bib  
+geometry: margin=0.5cm
+vignette: >
+  %\VignetteIndexEntry{GWAS.BAYES}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  tidy = FALSE
+)
+```
+
+```{r, warning=FALSE,message=FALSE}
+library(BG2)
+```
+
+# Introduction
+
+The `BG2` package provides statistical tools for the analysis of Poisson and Binary GWAS data. Currently, `BG2` contains functions to perform BG2 which is a novel two step Bayesian procedure that is shown to drastically reduce the rate of false discoveries when compared to single marker association testing (SMA) while maintaining the same level of recall of true causal SNPs. Full details on the BG2 procedure can be found in the manuscript.
+
+This vignette explores an example to show how the functions provided in `BG2` the BG2 procedure. Data has been simulated under a generalized linear mixed model from 188,980 for 152 _A. Thaliana_ ecotypes. `BG2` includes the 188,980 SNPs, the simulated phenotypes, and the kinship matrix used to simulate the data.
+
+# Functions
+
+The functions implemented in `BG2` are described below:
+
+* `BG2` Performs BICOSS, as described in the BG2 manuscript, conducts analysis for a given numeric phenotype vector either Binary or assumed Poisson distributted, a SNP matrix encoded numerically, and random effects. The `BG2` function returns the indices of the SNP matrix that were identified in the best model found by the BG2 procedure.
+
+# Model/Model Assumptions
+
+To fully understand the package `BG2` some brief model details are required. The model for GWAS studies used in this package is
+
+\begin{equation*}
+g(\textbf{y}) = X \boldsymbol{\beta} + Z_1 \boldsymbol{\alpha}_1 + \ldots + Z_l \boldsymbol{\alpha}_l
+\end{equation*}
+
+where
+
+* $g()$ is the link function.
+* $\textbf{y}$ is the phenotype response.
+* $X$ is the matrix of SNPs (single nucleotide polymorphisms).
+* $\boldsymbol{\beta}$ is the vector of regression coefficients that contains the effects of the SNPs.
+* $Z_i$ for $i \in (1,l)$ is an incidence matrix projecting the random effects $\boldsymbol{\alpha}_i$ associated with a covariance structure. Common covariance structures include the identify matrix or a kinship matrix.
+* $\boldsymbol{\alpha}_i$ is a vector of random effects with design matrix $Z_i$.
+
+
+Not all GWAS models have to be comprised of a kinship matrix (realized relationship matrix) but in some instances these structures are required to provide accurate results. A common issue with including the kinship component is the increased computational cost of this addition. `BG2` utilizes spectral decomposition techniques similar to that of @Kang1709 as well as population parameters previously determined [@P3D] to speed up computation. 
+
+# Example
+
+First, we illustrate what each of the data objects look like to inform the reader what type of objects are allowed to be inputted into the `BG2` package. The SNPs are as described in the _A. Thaliana_ case study in the BG2 manuscript. They are a subset of the TAIR9 genotype dataset and all SNPs have minor allele frequency greater than 0.01. The SNP matrix has to contain numeric values where each column corresponds to a SNP of interest and the $i$th row corresponds to the $i$th observed phenotype.
+
+```{r}
+SNPs[1:10,1:10]
+```
+
+Second, the observed phenotypes. This must be a numeric vector or a numeric $n \times 1$ matrix. `BG2` does not allow the analysis of multiple phenotypes at the same time. The function `BG2` allows for either Poisson distributed responses (`family = "poisson"`) or Binary responses `family = "binomial"`. The $i$th phenotype value must correspond to the $i$th row of the SNP matrix.
+
+```{r}
+Y_poisson[1:10]
+```
+
+Lastly, the kinship matrix. This is an $n \times n$ matrix containing only numeric values. The $i$th row or $i$th column explains how observation $i$ is related to other observations. 
+
+```{r}
+kinship[1:10,1:10]
+```
+
+## BG2
+
+The function `BG2` implements the BG2 method for generalized linear mixed models with either Poisson or Bernoulli distributted responses. This function takes inputs of the observed phenotypes, the SNPs coded numerically, the distributional family the response follows, fixed covariates treated as a matrix, the covariance matrices of the random effects, the design matrices of the random effects, the number of replicates of individuals or ecotypes you may have, and the choice of a fixed value or a prior for the dispersion parameter of the nonlocal prior. Further, the other inputs of `BG2` are the FDR nominal level, the maximum number of iterations of the genetic algorithm in the model selection step, and the number of consecutive iterations of the genetic algorithm with the same best model for convergence. The full details of BG2 are available in the BG2 manuscript. The default values of maximum iterations and the number of iterations at the values used in the simulation study in the BG paper, that is, 4000 and 400 respectively.
+
+Here we illustrate the use of BG2 with a nominal FDR of 0.05 with Poisson count data. First we specify the covariance matrices for the random effects. The first random effect $\boldsymbol{\alpha}_1 \sim N(0,\kappa_1 K)$ where $K$ is the realized relationship matrix or kinship matrix. The second random effect has the identity matrix as the covariance matrix. This second random effect is to account for overdispersion in the Poisson model. 
+
+```{r}
+n <- length(Y_poisson)
+covariance <- list()
+covariance[[1]] <- kinship
+covariance[[2]] <- diag(1, nrow = n, ncol = n)
+```
+
+We do not need to specify any design matrices in `Z` as we assume the observations have no other structure such as a grouping structure. `Z` is set to be NULL implying that $Z = I_{n \times n}$. Further, the number of ecotype replications is 12. Finally, we let the dispersion parameter of the nonlocal prior have a uniform prior.
+
+```{r}
+output_poisson <- BG2(Y=Y_poisson, SNPs=SNPs, Fixed = NULL, Covariance=covariance, Z=NULL, family="poisson", replicates=4, Tau="uniform",FDR_Nominal = 0.05, maxiterations = 4000, runs_til_stop = 400)
+```
+
+The data was generated with causal SNPs at positions 11,000, 29,000, 47,000, 65,000, 83,000, 91000, 120,000, 136,000, 159,000, and 173,000. BG2 identifies 3 causal SNPs directed as well as two SNPs highly correlated with causal SNPs.
+
+```{r}
+covariance <- list()
+covariance[[1]] <- kinship
+```
+
+```{r}
+output_binary <- BG2(Y=Y_binary, SNPs=SNPs, Fixed = NULL, Covariance=covariance, Z=NULL, family="binomial", replicates=NULL, Tau="uniform",FDR_Nominal = 0.05, maxiterations = 4000, runs_til_stop = 400)
+```
+
+
+## BG2 Case Study
+
+```{r}
+load(url("https://github.com/marf-at-vt/BG2/blob/main/BG2_Data/AThaliana_CaseStudy.rda?raw=true"))
+n <- length(Y)
+covariance <- list()
+covariance[[1]] <- kinship
+covariance[[2]] <- diag(1, nrow = n, ncol = n)
+
+output_casestudy <- BG2(Y=Y, SNPs=SNPs, Fixed = NULL, Covariance=covariance, Z=NULL, family="poisson", replicates=12, Tau="uniform",
+             FDR_Nominal = 0.05, maxiterations = 4000, runs_til_stop = 400)
+```
+
+
+
+```{r}
+sessionInfo()
+```
+
+
+# References
