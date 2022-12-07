@@ -623,18 +623,26 @@ BG2_terminal <- function(Y, Xs=NULL, SNPs,Z,kinship, P3D_return_dat, Tau = 1 ,fa
 #' @export
 BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NULL,replicates=NULL, Tau="uniform", maxiterations = 4000, runs_til_stop = 400){
   #Y: observations
+
   #SNPs: all SNP variables
-  #Xs: fixed covariates
+
+  #Fixed: fixed covariates
+
   #kinship: a list of covariance matrices of random effects
+
   #Z: a list of design matrices of random effects
+
   #family: "binomial" or "poisson"
+
   #replicates: if family = "poisson", the relipcates of each ecotype, can be a vector or a number.
   #            if family = "binomial", replicates = NULL
+
   #Tau: scale parameter of non-local prior
-  # Tau = 1: use uniform prior for tau
-  # Tau = 2: use inverse gamma prior for tau
+  # Tau = “uniform”: use uniform prior for tau
+  # Tau = “IG”: use inverse gamma prior for tau
   # Tau = 0.022: fixed tau at 0.022
   # Tau = 0.348: fixed tau at 0.348
+
   if(sum(family %in% c("poisson","binomial")) == 0){
     stop("family must be either poisson or binomial")
   }
@@ -739,10 +747,10 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
 "Y_binary"
 
 
-SMA <- function(Y, SNPs, Xs=NULL, kinship, Z=NULL, family, replicates=NULL, correction){
+SMA <- function(Y, SNPs, Fixed=NULL, kinship, Z=NULL, family, replicates=NULL, correction){
   #Y: observations
   #SNPs: all SNP variables, scaled
-  #Xs: fixed covariates
+  #Fixed: fixed covariates
   #kinship: a list of covariance matrices of random effects
   #Z: a list of design matrices of random effects
   #family: "binomial" or "poisson"
@@ -750,6 +758,7 @@ SMA <- function(Y, SNPs, Xs=NULL, kinship, Z=NULL, family, replicates=NULL, corr
   #            if family = "binomial", replicates = NULL
   #correction: "bonferroni" or "BH"
 
+  Xs <- Fixed
   n=length(Y)
   if(is.null(Z)){
     n_rf <- length(kinship)

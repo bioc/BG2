@@ -69,7 +69,7 @@ Y_poisson[1:5]
 The second simulated phenotype vector comes from a binary generalized linear mixed model with only a kinship random effect. The first five elements of the binary simulated vector of phenotypes:  
 
 ```{r}
-Y_poisson[1:5]
+Y_binary[1:5]
 ```
 
 Second, the SNP matrix has to contain numeric values where each column corresponds to a SNP of interest and the $i$th row corresponds to the $i$th observed phenotype. In this example, the SNPs are a subset of the _A. Thaliana_ TAIR9 genotype dataset and all SNPs have minor allele frequency greater than 0.01. Each simulated phenotype vector is simualted using this SNP matrix. Here are the first five rows and five columns of the SNP matrix:
@@ -99,7 +99,7 @@ covariance[[1]] <- kinship
 covariance[[2]] <- diag(1, nrow = n, ncol = n)
 ```
 
-The design matrices $Z_i$ do not need to be specified in `Z` as the observations have no other structure such as a grouping structure. `Z` is set to be NULL implying that $Z_i = I_{n \times n}$. Further, the number of ecotype replications is 12. Finally, we let the dispersion parameter of the nonlocal prior have a uniform prior.
+The design matrices $Z_i$ do not need to be specified in `Z` as the observations have no other structure such as a grouping structure. `Z` is set to be NULL implying that $Z_i = I_{n \times n}$. Further, the number of ecotype replications is 4. Finally, we let the dispersion parameter of the nonlocal prior have a uniform prior.
 
 ```{r}
 set.seed(1330)
@@ -130,7 +130,7 @@ Similarly, the data was generated with causal SNPs at positions 450, 1,350, 2,25
 
 ## BG2 A. Thaliana Case Study
 
-Copy and Paste description of dataset here.
+Data on root-like structures in A. Thaliana is from a study of plant regeneration from root explants [@lardon2020genetic]. We focus on the number of root-like structures after 21 days in which seedlings are under warm white light at 21$^o$C following a 14/10 h light/dark regime. There are 188,980 SNPs from 152 ecotypes of A. Thaliana from TAIR9 with MAF>0.01. Each ecotype has multiple explants.
 
 The SNP matrix, the kinship matrix, the observed phenotypes, and the SNP information for this _A. Thaliana_ case study are available from the link below. The model chosen to fit based on results of the simulation study in the BG2 manuscript is a Poisson generalized linear mixed model with a kinship random effect and an overdispersion random effect. Further, using a uniform prior for the nonlocal prior dispersion parameter $\tau$ has shown optimal results. The below code demonstrates how to obtain the results from the case study in the BG2 manuscript.
 
