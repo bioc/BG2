@@ -1,20 +1,21 @@
 Package: BG2
 Type: Package
-Title: Performs Bayesian GWAS analysis using BG2
-Version: 0.1.0
+Title: Performs Bayesian GWAS analysis for non-Gaussian data using BG2
+Version: 0.99.0
 Authors@R: 
   c(person(given = "Shuangshuang",
            family = "Xu",
-           role = c("aut", "cre"),
-           email = "xshuangshuang@vt.edu"),
+           role = c("aut")),
     person(given = "Jacob",
            family = "Williams",
-           role = "aut",
+           role = c("aut","cre"),
+           email = "jwilliams@vt.edu",
            comment = c(ORCID = "0000-0002-6425-1365")),
     person(given = "Marco",
            family = "Ferreira",
-           role = "aut"))
-Description: This package is built to perform GWAS analysis using BG2. The research related to this package was supported in part by National Science Foundation Award 1853549.
+           role = "aut",
+           comment = c(ORCID = "0000-0002-4705-5661"))
+Description: This package is built to perform GWAS analysis for non-Gaussian data using BG2. The research related to this package was supported in part by National Science Foundation awards DMS 1853549 and DMS 2054173.
 License: GPL-2 | GPL-3
 Encoding: UTF-8
 LazyData: true
