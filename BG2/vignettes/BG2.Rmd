@@ -1,6 +1,6 @@
 ---
 title: "BG2"
-author: "Shuangshuang Xu"
+author: "Shuangshuang Xu, Jacob Williams, and Marco A.R. Ferreira"
 date: "`r Sys.Date()`"
 output: 
     BiocStyle::html_document:
