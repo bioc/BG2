@@ -90,7 +90,7 @@ The function `BG2` implements the BG2 method for generalized linear mixed models
 
 ### BG2 Poisson Example
 
-Here we illustrate the use of BG2 with a nominal FDR of 0.05 with Poisson count data. First we specify the covariance matrices for the random effects. The first random effect is assumed to be $\boldsymbol{\alpha}_1 \sim N(0,\kappa_1 K)$, where $K$ is the realized relationship matrix or kinship matrix. The second random effect is assumed to be $\boldsymbol{\alpha}_1 \sim N(0,\kappa_2 I)$, where the covariance matrix is a identity matrix times a scalar. This second random effect is to account for overdispersion in the Poisson model. The `Covariance` argument takes a list of random effect covariance matrices. For this example, the list of covariance matrices is set as:
+Here we illustrate the use of BG2 with a nominal FDR of 0.05 with Poisson count data. First we specify the covariance matrices for the random effects. The first random effect is assumed to be $\boldsymbol{\alpha}_1 \sim N(0,\kappa_1 K)$, where $K$ is the realized relationship matrix or kinship matrix. The second random effect is assumed to be $\boldsymbol{\alpha}_1 \sim N(0,\kappa_2 I)$, where the covariance matrix is an identity matrix times a scalar. This second random effect is to account for overdispersion in the Poisson model. The `Covariance` argument takes a list of random effect covariance matrices. For this example, the list of covariance matrices is set as:
 
 ```{r}
 n <- length(Y_poisson)
