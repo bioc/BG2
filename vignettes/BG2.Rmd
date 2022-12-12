@@ -29,7 +29,7 @@ library(BG2)
 
 The `BG2` package provides statistical tools for the analysis of Poisson and Binary GWAS data. Currently, `BG2` contains functions to perform BG2 which is a novel two step Bayesian procedure that, when compared to single marker association testing (SMA), drastically reduces the rate of false discoveries while maintaining the same level of recall of true causal SNPs. Full details on the BG2 procedure can be found in the manuscript.
 
-This vignette explores two toy examples as well as a case study presented in the BG2 manuscript to illustrate how the functions provided in `BG2`  perform the BG2 procedure. Data has been simulated under a generalized linear mixed model from 9,000 SNPs of 328 _A. Thaliana_ ecotypes. The `BG2` package includes as `R` objects the simulated data; 9,000 SNPs, the simulated phenotypes (both binary and Poisson), and the kinship matrix used to simulate the data. Further, the Github repo that contains the `BG2` pacakge also contains contains the data for the _A. Thaliana_ case study.
+This vignette explores two toy examples as well as a case study presented in the BG2 manuscript to illustrate how the functions provided in `BG2`  perform the BG2 procedure. Data has been simulated under a generalized linear mixed model from 9,000 SNPs of 328 _A. Thaliana_ ecotypes. The `BG2` package includes as `R` objects the simulated data; 9,000 SNPs, the simulated phenotypes (both binary and Poisson), and the kinship matrix used to simulate the data. Further, the Github repo that contains the `BG2` package also contains contains the data for the _A. Thaliana_ case study.
 
 # Functions
 
@@ -142,7 +142,7 @@ The SNP matrix, the kinship matrix, the observed phenotypes, and the SNP informa
 
 ```{r}
 set.seed(1330)
-load(url("https://github.com/marf-at-vt/BG2/blob/main/BG2_Data/AThaliana_CaseStudy.rda?raw=true"))
+load(url("https://github.com/marf-at-vt/Case_studies/blob/main/BG2_Data/AThaliana_CaseStudy.rda?raw=true"))
 n <- length(Y)
 covariance <- list()
 covariance[[1]] <- kinship
