@@ -8,7 +8,7 @@ output:
 bibliography: references.bib  
 geometry: margin=0.5cm
 vignette: >
-  %\VignetteIndexEntry{GWAS.BAYES}
+  %\VignetteIndexEntry{BG2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
