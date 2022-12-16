@@ -27,7 +27,7 @@ BG2(
 
 \item{Fixed}{A matrix of fixed covariates to control for. Do not include the intercept. The value is defaulted at NULL implying no fixed covariates.}
 
-\item{family}{Specify if the response is count ("poisson") or binary ("binomial").}
+\item{family}{Specify if the response is count ("poisson") or binary ("bernoulli").}
 
 \item{Covariance}{A list of covariance matrices that are the covariance matrices of the random effects. This matches the list of design matrices in Z.}
 

@@ -607,7 +607,7 @@ BG2_terminal <- function(Y, Xs=NULL, SNPs,Z,kinship, P3D_return_dat, Tau = 1 ,fa
 #' @param SNPs The SNP matrix, where each column represents a single SNP encoded as the numeric coding 0, 1, 2. This is entered as a matrix object.
 #' @param FDR_Nominal The nominal false discovery rate for which SNPs are selected from in the screening step.
 #' @param Fixed A matrix of fixed covariates to control for. Do not include the intercept. The value is defaulted at NULL implying no fixed covariates.
-#' @param family Specify if the response is count ("poisson") or binary ("binomial").
+#' @param family Specify if the response is count ("poisson") or binary ("bernoulli").
 #' @param Covariance A list of covariance matrices that are the covariance matrices of the random effects. This matches the list of design matrices in Z.
 #' @param Z A list of matrices specifying the design matrix of each random effect of interest.
 #' @param replicates If family = "poisson", the replicates of each ecotype, can be a vector or a number if the number of replicates is the same for each ecotype. If family = "binomial", replicates = NULL.
@@ -632,10 +632,10 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
 
   #Z: a list of design matrices of random effects
 
-  #family: "binomial" or "poisson"
+  #family: "bernoulli" or "poisson"
 
   #replicates: if family = "poisson", the relipcates of each ecotype, can be a vector or a number.
-  #            if family = "binomial", replicates = NULL
+  #            if family = "bernoulli", replicates = NULL
 
   #Tau: scale parameter of non-local prior
   # Tau = “uniform”: use uniform prior for tau
@@ -643,8 +643,8 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
   # Tau = 0.022: fixed tau at 0.022
   # Tau = 0.348: fixed tau at 0.348
 
-  if(sum(family %in% c("poisson","binomial")) == 0){
-    stop("family must be either poisson or binomial")
+  if(sum(family %in% c("poisson","bernoulli")) == 0){
+    stop("family must be either poisson or bernoulli")
   }
   if(FDR_Nominal > 1 | FDR_Nominal < 0){
     stop("FDR_Nominal has to be between 0 and 1")
@@ -673,6 +673,9 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
   }
   if(Tau == "IG"){
     Tau <- 2
+  }
+  if(family == "bernoulli"){
+    family <- "binomial"
   }
   kinship <- Covariance
   SNPs <- scale(SNPs)

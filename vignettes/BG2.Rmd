@@ -56,7 +56,7 @@ where
 * $Z_i$ is an incidence matrix relating the random effects $\boldsymbol{\alpha}_i$ to the phenotype response.
 * $\boldsymbol{\alpha}_i$ is a vector of random effects with covariance matrix $\Sigma_i$. Common covariance structures include the identity matrix and kinship matrix.
 
-Currently, `BG2` can analyze binary responses (`family = "binomial"`) and Poisson responses (`family = "poisson"`). The BG2 manuscript provides full details on the priors for $\boldsymbol{\beta}$. `BG2` utilizes spectral decomposition techniques similar to that of @Kang1709 as well as population parameters previously determined [@P3D] to speed up computation. 
+Currently, `BG2` can analyze binary responses (`family = "bernoulli"`) and Poisson responses (`family = "poisson"`). The BG2 manuscript provides full details on the priors for $\boldsymbol{\beta}$. `BG2` utilizes spectral decomposition techniques similar to that of @Kang1709 as well as population parameters previously determined [@P3D] to speed up computation. 
 
 # Examples
 
@@ -126,7 +126,7 @@ In this example, the design matrices $Z_i$ do not need to be specified in `Z` as
 ```{r}
 set.seed(1330)
 output_binary <- BG2(Y=Y_binary, SNPs=SNPs, Fixed = NULL, 
-                     Covariance=covariance, Z=NULL, family="binomial", 
+                     Covariance=covariance, Z=NULL, family="bernoulli", 
                      replicates=NULL, Tau="IG",FDR_Nominal = 0.05, 
                      maxiterations = 4000, runs_til_stop = 400)
 output_binary
