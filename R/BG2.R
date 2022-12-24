@@ -701,7 +701,16 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
 
   if(!is.character(tmp$modelselection)){
     indices <- tmp$modelselection$SNPs[tmp$modelselection$BestModel == 1]
-    return(indices)
+    n_indices <- length(indices)
+    for(i in 1:n_indices){
+      screen_indices <- tmp$modelselection$SNPs
+      for(j in 1:length(screen_indices)){
+        if(identical(all.equal(cor(SNPs[,indices[i]], SNPs[,screen_indices[j]]),1),TRUE)){
+          indices <- c(indices,screen_indices[j])
+        }
+      }
+    }
+    return(unique(indices))
 
   }else{
     return("No significant SNP")
