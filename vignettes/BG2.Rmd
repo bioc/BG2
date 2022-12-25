@@ -110,7 +110,7 @@ output_poisson <- BG2(Y=Y_poisson, SNPs=SNPs, Fixed = NULL,
 output_poisson
 ```
 
-`BG2` outputs the column indices of the `SNPs` matrix that are in best model. The data was generated with causal SNPs at positions 450, 1,350, 2,250, 3,150, 4,050, 4,950, 5,850, 6,750, 7,650,and 8,550. BG2 identifies 5 causal SNPs.
+`BG2` outputs the column indices of the `SNPs` matrix that are in best model or column indices of SNPs perfectly correlated to SNPs in the best model. The data was generated with causal SNPs at positions 450, 1,350, 2,250, 3,150, 4,050, 4,950, 5,850, 6,750, 7,650,and 8,550. BG2 identifies 5 causal SNPs.
 
 ### BG2 Binary Example
 
