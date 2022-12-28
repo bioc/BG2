@@ -710,7 +710,7 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
         }
       }
     }
-    return(unique(indices))
+    return(unique(indices)[order(unique(indices))])
 
   }else{
     return("No significant SNP")
