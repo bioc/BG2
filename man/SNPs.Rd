@@ -9,10 +9,10 @@
 A matrix with 328 observations and 9,000 SNPs.
 }
 \usage{
-SNPs
+data(SNPs)
 }
 \description{
 This is a matrix with 328 observations and 9,000 SNPs. Each row is contains 9,000 SNPs from a single A. Thaliana ecotype in the paper
-Components of Root Architecture Remodeling in Response to Salt Stress.
+Components of Root Architecture Remodeling in Response to Salt Stress (Julkowska et al. Genetic Components of Root Architecture Remodeling in Response to Salt Stress, The Plant Cell, Volume 29, Issue 12, December 2017, Pages 3198–3213).
 }
 \keyword{datasets}

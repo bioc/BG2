@@ -9,11 +9,11 @@
 A matrix with 328 rows and 328 columns corresponding to the 328 ecotypes.
 }
 \usage{
-kinship
+data(kinship)
 }
 \description{
 This is a kinship matrix from the TAIR9 genotype information for 328 A. Thaliana Ecotypes from the paper
-Components of Root Architecture Remodeling in Response to Salt Stress. The kinship matrix was computed using all SNPs with minor allele frequency
+Components of Root Architecture Remodeling in Response to Salt Stress (Julkowska et al. Genetic Components of Root Architecture Remodeling in Response to Salt Stress, The Plant Cell, Volume 29, Issue 12, December 2017, Pages 3198–3213). The kinship matrix was computed using all SNPs with minor allele frequency
 greater than 0.01.
 }
 \keyword{datasets}

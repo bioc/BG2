@@ -9,7 +9,7 @@ BG2(
   SNPs,
   FDR_Nominal = 0.05,
   Fixed = NULL,
-  family,
+  family = c("poisson", "bernoulli"),
   Covariance,
   Z = NULL,
   replicates = NULL,
@@ -51,5 +51,16 @@ Performs BG2 as described in the manuscript ...
 }
 \examples{
 library(BG2)
+data("Y_poisson");data("SNPs");data("kinship")
+n <- length(Y_poisson)
+covariance <- list()
+covariance[[1]] <- kinship
+covariance[[2]] <- diag(1, nrow = n, ncol = n)
+
+set.seed(1330)
+output_poisson <- BG2(Y=Y_poisson, SNPs=SNPs, Fixed = NULL,
+                   Covariance=covariance, Z=NULL, family="poisson",
+                   replicates=4, Tau="uniform",FDR_Nominal = 0.05,
+                   maxiterations = 4000, runs_til_stop = 400)
 
 }

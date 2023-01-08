@@ -619,9 +619,20 @@ BG2_terminal <- function(Y, Xs=NULL, SNPs,Z,kinship, P3D_return_dat, Tau = 1 ,fa
 #' @return The column indices of SNPs that were in the best model identified by BICOSS.
 #' @examples
 #' library(BG2)
+#' data("Y_poisson");data("SNPs");data("kinship")
+#' n <- length(Y_poisson)
+#' covariance <- list()
+#' covariance[[1]] <- kinship
+#' covariance[[2]] <- diag(1, nrow = n, ncol = n)
+#'
+#' set.seed(1330)
+#' output_poisson <- BG2(Y=Y_poisson, SNPs=SNPs, Fixed = NULL,
+#'                    Covariance=covariance, Z=NULL, family="poisson",
+#'                    replicates=4, Tau="uniform",FDR_Nominal = 0.05,
+#'                    maxiterations = 4000, runs_til_stop = 400)
 #'
 #' @export
-BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NULL,replicates=NULL, Tau="uniform", maxiterations = 4000, runs_til_stop = 400){
+BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family=c("poisson","bernoulli"),Covariance, Z=NULL,replicates=NULL, Tau="uniform", maxiterations = 4000, runs_til_stop = 400){
   #Y: observations
 
   #SNPs: all SNP variables
@@ -642,6 +653,8 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
   # Tau = “IG”: use inverse gamma prior for tau
   # Tau = 0.022: fixed tau at 0.022
   # Tau = 0.348: fixed tau at 0.348
+
+  family <- match.arg(family)
 
   if(sum(family %in% c("poisson","bernoulli")) == 0){
     stop("family must be either poisson or bernoulli")
@@ -705,7 +718,7 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
     for(i in 1:n_indices){
       screen_indices <- tmp$modelselection$SNPs
       for(j in 1:length(screen_indices)){
-        if(identical(all.equal(cor(SNPs[,indices[i]], SNPs[,screen_indices[j]]),1),TRUE)){
+        if(identical(all.equal(stats::cor(SNPs[,indices[i]], SNPs[,screen_indices[j]]),1),TRUE)){
           indices <- c(indices,screen_indices[j])
         }
       }
@@ -721,7 +734,7 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
 #' A. Thaliana Kinship matrix
 #'
 #' This is a kinship matrix from the TAIR9 genotype information for 328 A. Thaliana Ecotypes from the paper
-#' Components of Root Architecture Remodeling in Response to Salt Stress. The kinship matrix was computed using all SNPs with minor allele frequency
+#' Components of Root Architecture Remodeling in Response to Salt Stress (Julkowska et al. Genetic Components of Root Architecture Remodeling in Response to Salt Stress, The Plant Cell, Volume 29, Issue 12, December 2017, Pages 3198–3213). The kinship matrix was computed using all SNPs with minor allele frequency
 #' greater than 0.01.
 #'
 #' @format ## `kinship`
@@ -731,7 +744,7 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
 #' A. Thaliana Genotype matrix
 #'
 #' This is a matrix with 328 observations and 9,000 SNPs. Each row is contains 9,000 SNPs from a single A. Thaliana ecotype in the paper
-#' Components of Root Architecture Remodeling in Response to Salt Stress.
+#' Components of Root Architecture Remodeling in Response to Salt Stress (Julkowska et al. Genetic Components of Root Architecture Remodeling in Response to Salt Stress, The Plant Cell, Volume 29, Issue 12, December 2017, Pages 3198–3213).
 #'
 #' @format ## `SNPs`
 #' A matrix with 328 observations and 9,000 SNPs.
@@ -757,44 +770,3 @@ BG2 <- function(Y, SNPs, FDR_Nominal = 0.05, Fixed=NULL, family,Covariance, Z=NU
 #' @format ## `Y_binary`
 #' A vector with 328 observations corresponding to the 328 ecotypes.
 "Y_binary"
-
-
-SMA <- function(Y, SNPs, Fixed=NULL, kinship, Z=NULL, family, replicates=NULL, correction){
-  #Y: observations
-  #SNPs: all SNP variables, scaled
-  #Fixed: fixed covariates
-  #kinship: a list of covariance matrices of random effects
-  #Z: a list of design matrices of random effects
-  #family: "binomial" or "poisson"
-  #replicates: if family = "poisson", the relipcates of each ecotype, can be a vector or a number.
-  #            if family = "binomial", replicates = NULL
-  #correction: "bonferroni" or "BH"
-
-  Xs <- Fixed
-  n=length(Y)
-  if(is.null(Z)){
-    n_rf <- length(kinship)
-    Z <- list()
-    for(rf in 1:n_rf){
-      Z[[rf]] <- diag(1, ncol = n, nrow = n)
-    }
-  }
-  P3D_return_dat <- P3D(Y=Y, SNPs=SNPs, Xs=Xs, kinship=kinship, Z=Z, family=family, replicates = replicates)
-
-  #estimate tau and pi0
-  beta.hat <- P3D_return_dat$Beta_Hat
-  var.beta.hat <- P3D_return_dat$Var_Beta_Hat
-  t.statistic <- beta.hat / sqrt(var.beta.hat)
-  pvalues <- 2*stats::pnorm(abs(t.statistic), mean=0, sd=1, lower.tail=FALSE)
-
-  indices <- which(stats::p.adjust(pvalues,method = correction) < 0.05)
-  if(length(indices)==0){
-    return("No significant SNP")
-  }else{
-    return(indices)
-  }
-
-
-}
-
-

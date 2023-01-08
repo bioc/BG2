@@ -9,7 +9,7 @@
 A vector with 328 observations corresponding to the 328 ecotypes.
 }
 \usage{
-Y_poisson
+data(Y_poisson)
 }
 \description{
 This is a phenotype matrix simulated from 9,000 SNPs. SNPs at positions 450, 1350, 2250, 3150, 4050,

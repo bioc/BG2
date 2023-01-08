@@ -1,7 +1,7 @@
 Package: BG2
 Type: Package
 Title: Performs Bayesian GWAS analysis for non-Gaussian data using BG2
-Version: 0.99.0
+Version: 0.99.1
 Authors@R: 
   c(person(given = "Jacob",
            family = "Williams",
@@ -15,11 +15,11 @@ Authors@R:
            family = "Ferreira",
            role = "aut",
            comment = c(ORCID = "0000-0002-4705-5661")))
-Description: This package is built to perform GWAS analysis for non-Gaussian data using BG2. The research related to this package was supported in part by National Science Foundation awards DMS 1853549 and DMS 2054173.
-License: GPL-2 | GPL-3
+Description: This package is built to perform GWAS analysis for non-Gaussian data using BG2. The BG2 method uses penalized quasi-likelihood along with nonlocal priors in a two step manner to identify SNPs in GWAS analysis. The research related to this package was supported in part by National Science Foundation awards DMS 1853549 and DMS 2054173.
+License: GPL-3 + file LICENSE
 Encoding: UTF-8
-LazyData: true
-biocViews: Bayesian, AssayDomain, SNP
+LazyData: false
+biocViews: Bayesian, AssayDomain, SNP, GenomeWideAssociation
 Imports: 
   GA (>= 3.2),
   caret (>= 6.0-86),
@@ -34,6 +34,8 @@ Suggests:
     knitr,
     rmarkdown,
     formatR,
-    rrBLUP
+    rrBLUP,
+    testthat (>= 3.0.0)
 RoxygenNote: 7.2.2
 VignetteBuilder: knitr
+Config/testthat/edition: 3

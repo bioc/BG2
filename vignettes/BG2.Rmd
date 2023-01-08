@@ -27,15 +27,15 @@ library(BG2)
 
 # Introduction
 
-The `BG2` package provides statistical tools for the analysis of Poisson and Binary GWAS data. Currently, `BG2` contains functions to perform BG2 which is a novel two step Bayesian procedure that, when compared to single marker association testing (SMA), drastically reduces the rate of false discoveries while maintaining the same level of recall of true causal SNPs. Full details on the BG2 procedure can be found in the manuscript.
+The `BG2` package provides statistical tools for the analysis of Poisson and Binary GWAS data. Currently, `BG2` contains functions to perform BG2 which is a novel two step Bayesian procedure that, when compared to single marker association testing (SMA), drastically reduces the rate of false discoveries while maintaining the same level of recall of true causal SNPs. Full details on the BG2 procedure can be found in the manuscript [@BG2]. The two packages in Bioconductor are GWASTools[@gogarten2012gwastools] and GWAS.BAYES[@BICOSS]. While GWASTools provides frequentist methods, BG2 provides Bayesian methods. While GWAS.Bayes provides methods for analysis of Gaussian data, BG2 provides methods for the analysis of non-Gaussian data.
 
-This vignette explores two toy examples as well as a case study presented in the BG2 manuscript to illustrate how the functions provided in `BG2`  perform the BG2 procedure. Data has been simulated under a generalized linear mixed model from 9,000 SNPs of 328 _A. Thaliana_ ecotypes. The `BG2` package includes as `R` objects the simulated data; 9,000 SNPs, the simulated phenotypes (both binary and Poisson), and the kinship matrix used to simulate the data. Further, the Github repo that contains the `BG2` package also contains contains the data for the _A. Thaliana_ case study.
+This vignette explores two toy examples as well as a case study presented in the BG2 manuscript [@BG2] to illustrate how the functions provided in `BG2`  perform the BG2 procedure. Data has been simulated under a generalized linear mixed model from 9,000 SNPs of 328 _A. Thaliana_ ecotypes. The `BG2` package includes as `R` objects the simulated data; 9,000 SNPs, the simulated phenotypes (both binary and Poisson), and the kinship matrix used to simulate the data. Further, the Github repo that contains the `BG2` package also contains contains the data for the _A. Thaliana_ case study.
 
 # Functions
 
 The function implemented in `BG2` is described below:
 
-* `BG2` Performs BG2, as described in the BG2 manuscript, using generalized linear mixed models for a given numeric phenotype vector either binary or assumed Poisson distributed `Y`, a SNP matrix encoded numerically `SNPs`, fixed covariates `Fixed`, and random effects and their projection matrices (`covariance` and `Z` respectively). The `BG2` function returns the indices of the SNP matrix that were identified in the best model found by the BG2 procedure.
+* `BG2` Performs BG2, as described in the BG2 manuscript [@BG2], using generalized linear mixed models for a given numeric phenotype vector either binary or assumed Poisson distributed `Y`, a SNP matrix encoded numerically `SNPs`, fixed covariates `Fixed`, and random effects and their projection matrices (`covariance` and `Z` respectively). The `BG2` function returns the indices of the SNP matrix that were identified in the best model found by the BG2 procedure.
 
 # Model/Model Assumptions
 
@@ -56,37 +56,41 @@ where
 * $Z_i$ is an incidence matrix relating the random effects $\boldsymbol{\alpha}_i$ to the phenotype response.
 * $\boldsymbol{\alpha}_i$ is a vector of random effects with covariance matrix $\Sigma_i$. Common covariance structures include the identity matrix and kinship matrix.
 
-Currently, `BG2` can analyze binary responses (`family = "bernoulli"`) and Poisson responses (`family = "poisson"`). The BG2 manuscript provides full details on the priors for $\boldsymbol{\beta}$. `BG2` utilizes spectral decomposition techniques similar to that of @Kang1709 as well as population parameters previously determined [@P3D] to speed up computation. 
+Currently, `BG2` can analyze binary responses (`family = "bernoulli"`) and Poisson responses (`family = "poisson"`). The BG2 manuscript [@BG2] provides full details on the priors for $\boldsymbol{\beta}$. `BG2` utilizes spectral decomposition techniques similar to that of @Kang1709 as well as population parameters previously determined [@P3D] to speed up computation. 
 
 # Examples
 
 The `BG2` function requires a vector of observed phenotypes (either binary or assumed Poisson distributed), a matrix of SNPs, and the specification of the random effects. First, the vector of observed phenotypes must be a numeric vector or a numeric $n \times 1$ matrix. `BG2` does not allow the analysis of multiple phenotypes simultaneously. In the `BG2` package, there are two simulated phenotype vectors. The first simulated phenotype vector comes from a Poisson generalized linear mixed model with both a kinship random effect and an overdispersion random effect. The data is assumed to have four replicates for each _A. Thaliana_ ecotype. Here are the first five elements of the Poisson simulated vector of phenotypes:  
 
 ```{r}
+data("Y_poisson")
 Y_poisson[1:5]
 ```
 
 The second simulated phenotype vector comes from a binary generalized linear mixed model with only a kinship random effect. The first five elements of the binary simulated vector of phenotypes are  
 
 ```{r}
+data("Y_binary")
 Y_binary[1:5]
 ```
 
 Second, the SNP matrix has to contain numeric values where each column corresponds to a SNP of interest and the $i$th row corresponds to the $i$th observed phenotype. In this example, the SNPs are a subset of the _A. Thaliana_ TAIR9 genotype dataset and all SNPs have minor allele frequency greater than 0.01. Each simulated phenotype vector is simulated using this SNP matrix. Here are the first five rows and five columns of the SNP matrix:
 
 ```{r}
+data("SNPs")
 SNPs[1:5,1:5]
 ```
 
 Third, the kinship matrix is an $n \times n$ positive semi-definite matrix containing only numeric values. The $i$th row or $i$th column quantifies how observation $i$ is related to other observations. Since, both simulated phenotypes are simulated from the same SNP matrix they also are simulated from the same kinship structure. The first five rows and five columns of the kinship matrix are
 
 ```{r}
+data("kinship")
 kinship[1:5,1:5]
 ```
 
 ## Simulated Data
 
-The function `BG2` implements the BG2 method for generalized linear mixed models with either Poisson or Bernoulli distributed responses. This function takes inputs of the observed phenotypes, the SNPs coded numerically, the distributional family the response follows, fixed covariates treated as a matrix, the covariance matrices of the random effects, the design matrices of the random effects, the number of replicates of individuals or ecotypes you may have, and the choice of a fixed value or a prior for the dispersion parameter of the nonlocal prior. Further, the other inputs of `BG2` are the FDR nominal level, the maximum number of iterations of the genetic algorithm in the model selection step, and the number of consecutive iterations of the genetic algorithm with the same best model for convergence. The full details of BG2 are available in the BG2 manuscript. The default values of maximum iterations and the number of iterations are the values used in the simulation study in the BG paper, that is, 4000 and 400 respectively.
+The function `BG2` implements the BG2 method for generalized linear mixed models with either Poisson or Bernoulli distributed responses. This function takes inputs of the observed phenotypes, the SNPs coded numerically, the distributional family the response follows, fixed covariates treated as a matrix, the covariance matrices of the random effects, the design matrices of the random effects, the number of replicates of individuals or ecotypes you may have, and the choice of a fixed value or a prior for the dispersion parameter of the nonlocal prior. Further, the other inputs of `BG2` are the FDR nominal level, the maximum number of iterations of the genetic algorithm in the model selection step, and the number of consecutive iterations of the genetic algorithm with the same best model for convergence. The full details of BG2 are available in the BG2 manuscript [@BG2]. The default values of maximum iterations and the number of iterations are the values used in the simulation study in the BG paper, that is, 4000 and 400 respectively.
 
 ### BG2 Poisson Example
 
@@ -121,7 +125,7 @@ covariance <- list()
 covariance[[1]] <- kinship
 ```
 
-In this example, the design matrices $Z_i$ do not need to be specified in `Z` as the observations have no other structure such as a grouping structure. `Z` is set to be NULL implying that $Z_i = I_{n \times n}$. With binary data, setting the number of replicates provides no computation gain and is not required. Finally, we let the dispersion parameter of the nonlocal prior have a Inverse Gamma distribution. Details on the Inverse Gamma Distribution are provide in the BG2 manuscript.
+In this example, the design matrices $Z_i$ do not need to be specified in `Z` as the observations have no other structure such as a grouping structure. `Z` is set to be NULL implying that $Z_i = I_{n \times n}$. With binary data, setting the number of replicates provides no computation gain and is not required. Finally, we let the dispersion parameter of the nonlocal prior have a Inverse Gamma distribution. Details on the Inverse Gamma Distribution are provide in the BG2 manuscript [@BG2].
 
 ```{r}
 set.seed(1330)
