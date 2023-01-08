@@ -2,7 +2,7 @@
 % Please edit documentation in R/BG2.R
 \name{BG2}
 \alias{BG2}
-\title{Performs BG2 as described in the manuscript ...}
+\title{Performs BG2 as described in the manuscript, Xu, Williams, and Ferreira BG2: Bayesian variable selection in generalized linear mixed models with non-local priors for non-Gaussian GWAS data, Bioinformatics, Submitted.}
 \usage{
 BG2(
   Y,

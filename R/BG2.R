@@ -599,7 +599,7 @@ BG2_terminal <- function(Y, Xs=NULL, SNPs,Z,kinship, P3D_return_dat, Tau = 1 ,fa
 
 }
 
-#' Performs BG2 as described in the manuscript ...
+#' Performs BG2 as described in the manuscript, Xu, Williams, and Ferreira BG2: Bayesian variable selection in generalized linear mixed models with non-local priors for non-Gaussian GWAS data, Bioinformatics, Submitted.
 #'
 #'
 #'
