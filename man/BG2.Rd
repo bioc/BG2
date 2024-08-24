@@ -38,13 +38,13 @@ BG2(
 \item{Tau}{Specifying either a fixed value for the dispersion parameter of the nonlocal prior (0.022 and 0.348 are used in the paper). Or specify a prior for tau, either uniform or Inverse Gamma centered at ...}
 
 \item{maxiterations}{The maximum iterations the genetic algorithm in the model selection step iterates for.
-Defaulted at 400 which is the value used in the BICOSS paper simulation studies.}
+Defaulted at 400 which is the value used in the BG2 paper simulation studies.}
 
 \item{runs_til_stop}{The number of iterations at the same best model before the genetic algorithm in the model selection step converges.
-Defaulted at 40 which is the value used in the BICOSS paper simulation studies.}
+Defaulted at 40 which is the value used in the BG2 paper simulation studies.}
 }
 \value{
-The column indices of SNPs that were in the best model identified by BICOSS.
+The column indices of SNPs that were in the best model identified by BG2.
 }
 \description{
 Performs BG2 as described in the manuscript ...
